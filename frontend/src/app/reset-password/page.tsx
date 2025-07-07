@@ -1,11 +1,13 @@
 'use client';
 
+import React, { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-export default function ResetPasswordPage() {
+// ছোট কম্পোনেন্ট যেটা useSearchParams ইউজ করবে
+function ResetPasswordForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -99,5 +101,14 @@ export default function ResetPasswordPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+// Suspense দিয়ে র‍্যাপ করা মূল export
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResetPasswordForm />
+        </Suspense>
     );
 }
