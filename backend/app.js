@@ -11,38 +11,52 @@ import cloudinaryRoutes from './routes/cloudinaryRoutes.js';
 
 const app = express();
 
+// ✅ Multiple frontend domain গুলো এখানেই define করা হচ্ছে
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://clabar-xzc1.vercel.app',
+    'https://clabar-hgwl.vercel.app'
+];
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, callback) => {
+        // Postman / curl এর জন্য origin undefined হলেও চলবে
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('❌ Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Middleware setup
+// ✅ Middleware setup
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Routes
+// ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
 
-// Health check route
+// ✅ Health check route
 app.get('/', (req, res) => {
-  res.status(200).send('<h1>Clabar backend is running!</h1>');
+    res.status(200).send('<h1>Clabar backend is running!</h1>');
 });
 
-// Error handling middleware (must be last middleware)
+// ✅ Error handling middleware (must be last middleware)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  res.status(statusCode).json({
-    success: false,
-    message,
-  });
+    console.error(err.stack);
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    res.status(statusCode).json({
+        success: false,
+        message,
+    });
 });
 
 export default app;
