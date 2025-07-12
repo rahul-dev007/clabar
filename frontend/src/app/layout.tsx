@@ -1,4 +1,4 @@
-// src/app/layout.tsx
+
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -24,7 +24,7 @@ export default function RootLayout({
                     AuthProvider দিয়ে children কে র‍্যাপ করা হচ্ছে।
                     এখন আপনার পুরো অ্যাপ SessionProvider এর আওতায় থাকবে।
                 */}
-                <AuthProvider>{children}</AuthProvider> 
+                <AuthProvider>{children}</AuthProvider>
             </body>
         </html>
     );
